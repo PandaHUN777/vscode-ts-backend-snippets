@@ -1,0 +1,237 @@
+{
+  "Express Server": {
+    "prefix": "server",
+    "body": [
+      "import express from 'express';",
+      "import cors from 'cors';",
+      "",
+      "const app = express();",
+      "const PORT = process.env.PORT ?? 3000;",
+      "",
+      "app.use(cors());",
+      "app.use(express.json());",
+      "",
+      "// Routes",
+      "",
+      "app.get('/health', (req, res) => {",
+      "  res.json({ status: 'ok' });",
+      "});",
+      "",
+      "app.listen(PORT, () => {",
+      "  console.log(`Server running on http://localhost:${PORT}`);",
+      "});"
+    ],
+    "description": "Express server boilerplate with CORS"
+  },
+
+  "Route File": {
+    "prefix": "route",
+    "body": [
+      "import { Router } from 'express';",
+      "import { ${1:controllerName} } from '../controllers/${2:controllerFile}.ts';",
+      "",
+      "const router = Router();",
+      "",
+      "router.get('/${3:path}', ${1:controllerName});",
+      "router.post('/${3:path}', ${1:controllerName});",
+      "",
+      "export default router;"
+    ],
+    "description": "Express router boilerplate"
+  },
+
+  "Controller": {
+    "prefix": "controller",
+    "body": [
+      "import type { Request, Response } from 'express';",
+      "import { ${1:ServiceName} } from '../services/${2:serviceName}.ts';",
+      "",
+      "const service = new ${1:ServiceName}();",
+      "",
+      "export const ${3:functionName} = async (",
+      "  req: Request,",
+      "  res: Response",
+      "): Promise<void> => {",
+      "  try {",
+      "    const { $4 } = req.body;",
+      "",
+      "    const result = await service.${5:methodName}($4);",
+      "",
+      "    res.status(200).json({ data: result });",
+      "  } catch (error) {",
+      "    console.error('Error:', error);",
+      "    res.status(500).json({ error: 'Internal server error' });",
+      "  }",
+      "};"
+    ],
+    "description": "Express controller boilerplate"
+  },
+
+  "Service Class": {
+    "prefix": "service",
+    "body": [
+      "import type { ${1:TypeName} } from '../types/${2:typesFile}.ts';",
+      "",
+      "export class ${3:ServiceName} {",
+      "",
+      "  async ${4:methodName}(${5:param}: ${6:ParamType}): Promise<${7:ReturnType}> {",
+      "    try {",
+      "      $0",
+      "    } catch (error) {",
+      "      throw new Error(`${4:methodName} failed: \\${error}`);",
+      "    }",
+      "  }",
+      "",
+      "}"
+    ],
+    "description": "Service class boilerplate"
+  },
+
+  "Types File": {
+    "prefix": "types",
+    "body": [
+      "export type ${1:StatusType} = 'pending' | 'approved' | 'declined';",
+      "",
+      "export interface ${2:MainEntity} {",
+      "  id: string;",
+      "  $0",
+      "}",
+      "",
+      "export interface ${3:RequestType} {",
+      "  ",
+      "}",
+      "",
+      "export interface ${4:ResponseType} {",
+      "  ",
+      "}"
+    ],
+    "description": "TypeScript types boilerplate"
+  },
+
+  "Map Mock DB": {
+    "prefix": "mockdb",
+    "body": [
+      "const ${1:entityName}s = new Map<string, ${2:EntityType}>([",
+      "  ['${3:id-001}', {",
+      "    id: '${3:id-001}',",
+      "    $0",
+      "  }]",
+      "]);",
+      "",
+      "const processedRequests = new Map<string, ${4:ResponseType}>();"
+    ],
+    "description": "Map-based mock database"
+  },
+
+  "Idempotency Check": {
+    "prefix": "idempotency",
+    "body": [
+      "// Idempotency check — prevent double processing",
+      "const cached = service.isAlreadyProcessed(${1:idempotencyKey});",
+      "if (cached) {",
+      "  res.status(200).json({ message: 'Already processed', data: cached });",
+      "  return;",
+      "}"
+    ],
+    "description": "Idempotency check block"
+  },
+
+  "Middleware": {
+    "prefix": "middleware",
+    "body": [
+      "import type { Request, Response, NextFunction } from 'express';",
+      "",
+      "export const ${1:middlewareName} = (",
+      "  req: Request,",
+      "  res: Response,",
+      "  next: NextFunction",
+      "): void => {",
+      "  try {",
+      "    $0",
+      "    next();",
+      "  } catch (error) {",
+      "    next(error);",
+      "  }",
+      "};"
+    ],
+    "description": "Express middleware boilerplate"
+  },
+
+  "Error Middleware": {
+    "prefix": "err-middleware",
+    "body": [
+      "import type { Request, Response, NextFunction } from 'express';",
+      "",
+      "export const errorMiddleware = (",
+      "  error: Error,",
+      "  req: Request,",
+      "  res: Response,",
+      "  next: NextFunction",
+      "): void => {",
+      "  console.error('Unhandled error:', error);",
+      "",
+      "  const statusCode = (error as any).statusCode ?? 500;",
+      "  const message = error.message ?? 'Internal server error';",
+      "",
+      "  res.status(statusCode).json({ error: message });",
+      "};"
+    ],
+    "description": "Express error-handling middleware boilerplate (4-arg signature)"
+  },
+
+  "Auth Middleware": {
+    "prefix": "authmiddleware",
+    "body": [
+      "import type { Request, Response, NextFunction } from 'express';",
+      "",
+      "export const ${1:authMiddleware} = (",
+      "  req: Request,",
+      "  res: Response,",
+      "  next: NextFunction",
+      "): void => {",
+      "  try {",
+      "    const authHeader = req.headers.authorization;",
+      "",
+      "    if (!authHeader?.startsWith('Bearer ')) {",
+      "      res.status(401).json({ error: 'Unauthorized' });",
+      "      return;",
+      "    }",
+      "",
+      "    const token = authHeader.split(' ')[1];",
+      "    $0",
+      "",
+      "    next();",
+      "  } catch (error) {",
+      "    res.status(401).json({ error: 'Invalid token' });",
+      "  }",
+      "};"
+    ],
+    "description": "Express auth middleware boilerplate with Bearer token extraction"
+  },
+
+  "Jest Test": {
+    "prefix": "test",
+    "body": [
+      "import { ${1:ServiceName} } from '../services/${2:serviceName}.ts';",
+      "",
+      "describe('${1:ServiceName}', () => {",
+      "  let service: ${1:ServiceName};",
+      "",
+      "  beforeEach(() => {",
+      "    service = new ${1:ServiceName}();",
+      "  });",
+      "",
+      "  it('${3:should do something}', async () => {",
+      "    // Arrange",
+      "    $0",
+      "",
+      "    // Act",
+      "",
+      "    // Assert",
+      "    expect(true).toBe(true);",
+      "  });",
+      "});"
+    ],
+    "description": "Jest test boilerplate"
+  }
+}
