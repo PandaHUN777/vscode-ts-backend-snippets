@@ -1,6 +1,7 @@
 {
   "name": "vscode-ts-backend-snippets",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "verify": "tsx scripts/verify-snippets.ts"
