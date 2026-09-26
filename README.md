@@ -55,7 +55,7 @@ The generated code assumes:
 | Routing    | `xp-route`          | Express Route File     | Express Router with GET and POST handlers wired to a controller              |
 | Routing    | `xp-controller`     | Express Controller     | Async controller that calls a service; errors reach the error middleware     |
 | Middleware | `xp-mw-base`        | Middleware             | Generic Express middleware                                                   |
-| Middleware | `xp-mw-log`         | Request Logger         | Logs method, URL, status code and duration on response finish                |
+| Middleware | `xp-mw-log`         | Request Logger         | Logs method, URL, status and duration on response close, including aborts    |
 | Middleware | `xp-mw-auth`        | Auth Middleware        | Bearer token extraction and verification                                     |
 | Middleware | `xp-mw-error`       | Error Middleware       | 4-argument error handler: `AppError` and 4xx client errors, generic 500 else |
 | Middleware | `xp-mw-idempotency` | Idempotency Middleware | `Idempotency-Key` handling with payload hashing and response replay          |
@@ -216,7 +216,7 @@ export const middlewareName = (
 
 #### `xp-mw-log`: Request Logger Middleware
 
-Middleware that records request arrival time and logs the method, URL, HTTP status code and elapsed duration once the response finishes (`res.on('finish')`). Tab stop: `requestLogger`.
+Middleware that records request arrival time with monotonic `performance.now()` and logs the method, URL, status and elapsed duration when the response closes. It labels the status as `aborted` when `res.writableFinished` is false. Tab stop: `requestLogger`.
 
 ```ts
 import type { Request, Response, NextFunction } from 'express';
@@ -226,12 +226,13 @@ export const requestLogger = (
   res: Response,
   next: NextFunction
 ): void => {
-  const start = Date.now();
+  const start = performance.now();
 
-  res.on('finish', () => {
-    const duration = Date.now() - start;
+  res.on('close', () => {
+    const duration = performance.now() - start;
+    const status = res.writableFinished ? res.statusCode : 'aborted';
     console.log(
-      `${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`
+      `${req.method} ${req.originalUrl} ${status} - ${duration}ms`
     );
   });
 
