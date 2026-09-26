@@ -273,6 +273,31 @@
     "description": "xp-mw-base: generic Express middleware"
   },
 
+  "Request Logger Middleware": {
+    "prefix": "xp-mw-log",
+    "body": [
+      "import type { Request, Response, NextFunction } from 'express';",
+      "",
+      "export const ${1:requestLogger} = (",
+      "  req: Request,",
+      "  res: Response,",
+      "  next: NextFunction",
+      "): void => {",
+      "  const start = Date.now();",
+      "",
+      "  res.on('finish', () => {",
+      "    const duration = Date.now() - start;",
+      "    console.log(",
+      "      `\\${req.method} \\${req.originalUrl} \\${res.statusCode} - \\${duration}ms`",
+      "    );",
+      "  });",
+      "",
+      "  $0next();",
+      "};"
+    ],
+    "description": "xp-mw-log: request logger middleware that logs method, URL, status and duration on response finish"
+  },
+
   "Error Middleware": {
     "prefix": "xp-mw-error",
     "body": [
