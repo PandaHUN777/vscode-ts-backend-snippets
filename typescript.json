@@ -283,19 +283,21 @@
       "  res: Response,",
       "  next: NextFunction",
       "): void => {",
-      "  const start = Date.now();",
+      "  const start = performance.now();",
       "",
-      "  res.on('finish', () => {",
-      "    const duration = Date.now() - start;",
+      "  res.on('close', () => {",
+      "    const duration = performance.now() - start;",
+      "    const status = res.writableFinished ? res.statusCode : 'aborted';",
       "    console.log(",
-      "      `\\${req.method} \\${req.originalUrl} \\${res.statusCode} - \\${duration}ms`",
+      "      `\\${req.method} \\${req.originalUrl} \\${status} - \\${duration}ms`",
       "    );",
       "  });",
       "",
-      "  $0next();",
+      "  $0",
+      "  next();",
       "};"
     ],
-    "description": "xp-mw-log: request logger middleware that logs method, URL, status and duration on response finish"
+    "description": "xp-mw-log: request logger middleware that logs method, URL, status and duration on response close, including aborted requests"
   },
 
   "Error Middleware": {
