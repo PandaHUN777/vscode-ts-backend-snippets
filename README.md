@@ -4,6 +4,8 @@ A personal, growing collection of VS Code snippets for building Node.js / Expres
 
 > Focused on backend development. More snippets are added as real patterns emerge from building apps.
 
+![Demo: typing xp- snippets in VS Code to scaffold an Express backend](./docs/demo.gif)
+
 ---
 
 ## Installation
