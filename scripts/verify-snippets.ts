@@ -41,6 +41,7 @@ const SNIPPET_PATHS: Record<string, string> = {
   'xp-mockdb': 'src/db/mockDb.ts',
   'xp-mw-idempotency': 'src/middleware/idempotency.ts',
   'xp-mw-base': 'src/middleware/base.ts',
+  'xp-mw-log': 'src/middleware/log.ts',
   'xp-mw-error': 'src/middleware/error.ts',
   'xp-mw-auth': 'src/middleware/auth.ts',
   'xp-error-base': 'src/errors/AppError.ts',
