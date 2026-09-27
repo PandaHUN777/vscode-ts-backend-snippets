@@ -1,0 +1,11 @@
+.github/**
+.vscode/**
+scripts/**
+node_modules/**
+docs/**
+playground/**
+*.vsix
+.gitignore
+CONTRIBUTING.md
+package-lock.json
+**/.DS_Store

@@ -1,16 +1,55 @@
 {
   "name": "vscode-ts-backend-snippets",
-  "private": true,
+  "displayName": "Express TypeScript Backend Snippets",
+  "description": "Express 5 + TypeScript (ESM/NodeNext) snippets. Type xp- to scaffold apps, servers, routes, controllers, services, middleware, errors and Jest tests.",
+  "version": "0.1.0",
+  "publisher": "menahil-tanveer55",
   "license": "MIT",
+  "private": true,
   "type": "module",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Snippets"
+  ],
+  "keywords": [
+    "express",
+    "typescript",
+    "backend",
+    "node",
+    "snippets",
+    "boilerplate",
+    "middleware",
+    "esm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/menahil-tanveer55/vscode-ts-backend-snippets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/menahil-tanveer55/vscode-ts-backend-snippets/issues"
+  },
+  "homepage": "https://github.com/menahil-tanveer55/vscode-ts-backend-snippets#readme",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "typescript",
+        "path": "./typescript.json"
+      }
+    ]
+  },
   "scripts": {
-    "verify": "tsx scripts/verify-snippets.ts"
+    "verify": "tsx scripts/verify-snippets.ts",
+    "package": "vsce package",
+    "vscode:prepublish": "npm run verify"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.19.43",
+    "@vscode/vsce": "^3.9.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "tsx": "^4.23.15",
